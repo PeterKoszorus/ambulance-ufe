@@ -1,7 +1,4 @@
 import { Component, Host, h } from '@stencil/core';
-import '@material/web/list/list'
-import '@material/web/list/list-item'
-import '@material/web/icon/icon'
 
 @Component({
   tag: 'pko-ambulance-wl-list',
@@ -63,5 +60,5 @@ export class PkoAmbulanceWlList {
     if(!iso) return '';
     return new Date(Date.parse(iso)).toLocaleTimeString()
   }
-  
+
 }
