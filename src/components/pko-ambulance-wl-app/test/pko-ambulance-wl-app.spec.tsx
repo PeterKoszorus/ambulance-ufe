@@ -7,7 +7,7 @@ describe( 'pko-ambulance-wl-app', () => {
     const page = await newSpecPage({
       url: `http://localhost/entry/@new`,
       components:  [PkoAmbulanceWlApp],
-      html: ` pko-ambulance-wl-app base-path="/">< pko-ambulance-wl-app>`,
+      html: `<pko-ambulance-wl-app base-path="/"></pko-ambulance-wl-app>`,
     });
     page.win.navigation = new EventTarget()
     const child = await page.root.shadowRoot.firstElementChild;
@@ -19,7 +19,7 @@ describe( 'pko-ambulance-wl-app', () => {
     const page = await newSpecPage({
       url: `http://localhost/ambulance-wl/`,
       components:  [PkoAmbulanceWlApp],
-      html: ` pko-ambulance-wl-app base-path="/ambulance-wl/">< pko-ambulance-wl-app>`,
+      html: `<pko-ambulance-wl-app base-path="/ambulance-wl/"></pko-ambulance-wl-app>`,
     });
     page.win.navigation = new EventTarget()
     const child = await page.root.shadowRoot.firstElementChild;
