@@ -60,6 +60,7 @@ export class PkoAmbulanceWlApp {
       <Host>
         { element === "editor"
         ? <pko-ambulance-wl-editor entry-id={entryId}
+            ambulance-id={this.ambulanceId} api-base={this.apiBase}
             oneditor-closed={ () => navigate("./list")} >
           </pko-ambulance-wl-editor>
         : <pko-ambulance-wl-list ambulance-id={this.ambulanceId} api-base={this.apiBase}
