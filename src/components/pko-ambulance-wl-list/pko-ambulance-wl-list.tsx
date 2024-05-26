@@ -1,6 +1,5 @@
-import { Component, Event, EventEmitter,  Host, h, Prop, State } from '@stencil/core';
-import { AmbulanceWaitingListApiFactory, WaitingListEntry } from '../../api/ambulance-wl';
-
+import {Component, Host, Event, h, EventEmitter, State, Prop} from '@stencil/core';
+import {AmbulanceWaitingListApiFactory, WaitingListEntry} from "../../api/ambulance-wl";
 
 @Component({
   tag: 'pko-ambulance-wl-list',
@@ -8,19 +7,21 @@ import { AmbulanceWaitingListApiFactory, WaitingListEntry } from '../../api/ambu
   shadow: true,
 })
 export class PkoAmbulanceWlList {
-
-  @Event({ eventName: "entry-clicked"}) entryClicked: EventEmitter<string>;
+  @Event({eventName: "entry-clicked"}) entryClicked: EventEmitter<string>;
   @Prop() apiBase: string;
   @Prop() ambulanceId: string;
   @State() errorMessage: string;
-  
+
   waitingPatients: WaitingListEntry[];
 
-  private async getWaitingPatientsAsync(): Promise<WaitingListEntry[]>{
+  async componentWillLoad() {
+    this.waitingPatients = await this.getWaitingPatientsAsync();
+  }
+
+  private async getWaitingPatientsAsync(): Promise<WaitingListEntry[]> {
     try {
       const response = await
-        AmbulanceWaitingListApiFactory(undefined, this.apiBase).
-          getWaitingListEntries(this.ambulanceId)
+        AmbulanceWaitingListApiFactory(undefined, this.apiBase).getWaitingListEntries(this.ambulanceId)
       if (response.status < 299) {
         return response.data;
       } else {
@@ -32,37 +33,33 @@ export class PkoAmbulanceWlList {
     return [];
   }
 
-  async componentWillLoad() {
-    this.waitingPatients = await this.getWaitingPatientsAsync();
-  }
-
   render() {
     return (
       <Host>
         {this.errorMessage
-        ? <div class="error">{this.errorMessage}</div>
-        :
-        <md-list>
-          {this.waitingPatients.map((patient) =>
-            <md-list-item onClick={ () => this.entryClicked.emit(patient.id)}>
-              <div slot="headline">{patient.name}</div>
-              <div slot="supporting-text">{"Predpokladaný vstup: " + this.isoDateToLocale(patient.estimatedStart)}</div>
-                  <md-icon slot="start">person</md-icon>
-            </md-list-item>
-          )}
-        </md-list>
+          ? <div class="error">{this.errorMessage}</div>
+          :
+          <md-list>
+            {this.waitingPatients.map((patient) =>
+              <md-list-item onClick={() => this.entryClicked.emit(patient.id)}>
+                <div slot="headline">{patient.name}</div>
+                <div
+                  slot="supporting-text">{"Predpokladaný vstup: " + this.isoDateToLocale(patient.estimatedStart)}</div>
+                <md-icon slot="start">person</md-icon>
+              </md-list-item>
+            )}
+          </md-list>
         }
-        <md-filled-icon-button class="add-button"
-          onclick={() => this.entryClicked.emit("@new")}>
+        <md-filled-icon-button className="add-button"
+                               onclick={() => this.entryClicked.emit("@new")}>
           <md-icon>add</md-icon>
         </md-filled-icon-button>
       </Host>
     );
   }
 
-  private isoDateToLocale(iso:string) {
-    if(!iso) return '';
+  private isoDateToLocale(iso: string) {
+    if (!iso) return '';
     return new Date(Date.parse(iso)).toLocaleTimeString()
   }
-
 }
